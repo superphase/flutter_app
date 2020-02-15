@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-
 
 void main() => runApp(MyApp());
 
@@ -10,117 +7,235 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-            appBar: AppBar(
-              title: Text("poke app"),
-            ),
-            drawer: Drawer(
-                child: Center(child: Text("drawer"))
-            ),
-            body: Column(
-              children: <Widget>[
-                _calcArea(),
-                _pokeArea(150.0),
-                _partyArea(),
-              ],
-            ) // This trailing comma makes auto-formatting nicer for build methods.
-        )
-    );
-  }
-
-  Widget _calcArea() {
-    return Container(
-        height: 10.0,
-        child: Row(
-          children: <Widget>[
-            Text("H"),
-            Text("S"),
-          ],
-        )
-    );
-  }
-
-  Widget _pokeArea(double size) {
-    var list = [
-      _pokephoto("001"),
-      _pokephoto("002"),
-      _pokephoto("003"),
-      _pokephoto("004"),
-      _pokephoto("005"),
-      _pokephoto("006"),
-      _pokephoto("007"),
-      _pokephoto("008"),
-      _pokephoto("009"),
-      _pokephoto("010"),
-      _pokephoto("011"),
-      _pokephoto("012"),
-      _pokephoto("013"),
-      _pokephoto("014"),
-      _pokephoto("015"),
-      _pokephoto("016"),
-      _pokephoto("017"),
-      _pokephoto("018"),
-      _pokephoto("019"),
-      _pokephoto("020"),
-      _pokephoto("000"),
-    ];
-    return Container(
-      height: size,
-      child: GridView.count(
-          crossAxisCount: 6,
-          children: list
+      appBar: AppBar(
+        title: Text("pole app"),
       ),
-    );
-  }
-
-  Widget _pokephoto(String image) {
-    var assetsImage = "images/" + image + ".png";
-    return Container(
-        child: new Draggable(
-          data: assetsImage,
-          child: Container(
-            child: Image.asset(assetsImage, fit: BoxFit.cover, height: 50, width: 50),
-          ),
-          feedback: Container(
-            child: Image.asset(assetsImage, height: 50, width: 50),
-          ),
-        ),
-    );
-  }
-
-  Widget _partyArea() {
-    return Container(
-      child: Table(
-        border: TableBorder.all(),
-        children: [
-          TableRow( children: [
-            Column(children: <Widget>[
-              _imageDropArea(),
-              _imageDropArea(),
-              _imageDropArea(),
-            ]),
-            Column(children: <Widget>[
-              _imageDropArea(),
-              _imageDropArea(),
-              _imageDropArea(),
-            ]),
-          ])
+      body: Column(
+        children: <Widget>[
+          _calcArea(),
+          Expanded(
+            child: new MainPage(title: "poke app"),
+          )
         ],
       ),
+    )
+        //home: new MainPage(title: 'poke app')
+        );
+  }
+}
+
+class MainPage extends StatefulWidget {
+  MainPage({Key key, this.title}) : super(key: key);
+  final String title;
+  @override
+  _MainPageState createState() => new _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  String myData1 = "images/001.png";
+  String myData2 = "images/002.png";
+  String myData3 = "images/003.png";
+  String myData4 = "images/004.png";
+  String myData5 = "images/005.png";
+  String myData6 = "images/006.png";
+  String enemyData1 = "images/007.png";
+  String enemyData2 = "images/008.png";
+  String enemyData3 = "images/009.png";
+  String enemyData4 = "images/010.png";
+  String enemyData5 = "images/011.png";
+  String enemyData6 = "images/012.png";
+
+  @override
+  Widget build(BuildContext context) {
+    return new Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: Table(
+                border: TableBorder.all(),
+                children: [
+                  TableRow(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: 50,
+                        padding: EdgeInsets.all(10.0),
+                        child: PokeBox(img: myData1),
+                      ),
+                      Container(
+                        height: 50,
+                        width: 50,
+                        padding: EdgeInsets.all(10.0),
+                        child: PokeBox(img: myData2),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: 50,
+                        padding: EdgeInsets.all(10.0),
+                        child: PokeBox(img: myData3),
+                      ),
+                      Container(
+                        height: 50,
+                        width: 50,
+                        padding: EdgeInsets.all(10.0),
+                        child: PokeBox(img: myData4),
+                      ),
+                    ],
+                  ),
+                  TableRow(children: [
+                    Container(
+                      height: 50,
+                      width: 50,
+                      padding: EdgeInsets.all(10.0),
+                      child: PokeBox(img: myData5),
+                    ),
+                    Container(
+                      height: 50,
+                      width: 50,
+                      padding: EdgeInsets.all(10.0),
+                      child: PokeBox(img: myData6),
+                    ),
+                  ])
+                ],
+              ),
+            ),
+            Expanded(
+              child: Table(
+                border: TableBorder.all(),
+                children: [
+                  TableRow(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: 50,
+                        padding: EdgeInsets.all(10.0),
+                        child: PokeBox(img: enemyData1),
+                      ),
+                      Container(
+                        height: 50,
+                        width: 50,
+                        padding: EdgeInsets.all(10.0),
+                        child: PokeBox(img: enemyData2),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: 50,
+                        padding: EdgeInsets.all(10.0),
+                        child: PokeBox(img: enemyData3),
+                      ),
+                      Container(
+                        height: 50,
+                        width: 50,
+                        padding: EdgeInsets.all(10.0),
+                        child: PokeBox(img: enemyData4),
+                      ),
+                    ],
+                  ),
+                  TableRow(children: [
+                    Container(
+                      height: 50,
+                      width: 50,
+                      padding: EdgeInsets.all(10.0),
+                      child: PokeBox(img: enemyData5),
+                    ),
+                    Container(
+                      height: 50,
+                      width: 50,
+                      padding: EdgeInsets.all(10.0),
+                      child: PokeBox(img: enemyData6),
+                    ),
+                  ])
+                ],
+              ),
+            ),
+          ],
+        ),
+        Container(
+          height: 50,
+          width: 50,
+          padding: EdgeInsets.all(10.0),
+          child: buildDraggable("images/001.png"),
+        ),
+        Container(
+          height: 50,
+          width: 50,
+          padding: EdgeInsets.all(10.0),
+          child: buildDraggable("images/333.png"),
+        ),
+      ],
     );
+  }
+}
+
+class PokeBox extends StatefulWidget {
+  final String img;
+  PokeBox({Key key, this.img}) : super(key: key);
+  @override
+  _PokeBoxState createState() => new _PokeBoxState(boxPoke: img);
+}
+
+class _PokeBoxState extends State<PokeBox> {
+  String boxPoke;
+  _PokeBoxState({this.boxPoke});
+  void changeData(data) {
+    boxPoke = data;
   }
 
-  Widget _imageDropArea() {
-    return  DragTarget(
-        builder: (contest, candidateData, rejectData) {
-          return new Container(
-            width: 50,
-            height: 50,
-            color: Colors.red,
-          );
-        },
-        onAccept: (data){
-          print("A");
-          },
+  @override
+  Widget build(BuildContext context) {
+    return new DragTarget(
+      builder: (context, candidateData, rejectedData) {
+        return Image.asset(boxPoke, height: 50, width: 50);
+      },
+      onAccept: (data) {
+        changeData(data);
+      },
+      //child: Image.asset(boxPoke, height: 50, width: 50),
     );
   }
+}
+
+Draggable buildDraggable(String data1) => new Draggable(
+      data: data1,
+      child: Image.asset(data1, fit: BoxFit.cover, height: 50, width: 50),
+      feedback: Image.asset(data1, fit: BoxFit.cover, height: 50, width: 50),
+    );
+
+//DragTarget buildDragTarget(String data1) => new DragTarget(
+//  builder: (context, candidateData, rejectedData) {
+//    print("DragTarget: $candidateData data1: $data1");
+//    return Image.asset(data1, height: 50, width: 50);
+//  },
+//  onAccept: (data){
+//
+//  },
+//  onLeave: (data){
+//    print("leave");
+//  },
+//);
+
+Widget _calcArea() {
+  return Container(
+    height: 20.0,
+    child: Row(
+      children: <Widget>[
+        Text("H"),
+        Text("A"),
+        Text("B"),
+        Text("C"),
+        Text("D"),
+        Text("S"),
+      ],
+    ),
+  );
 }
