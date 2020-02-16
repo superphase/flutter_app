@@ -3,12 +3,32 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  final appTitle = "Poke app";
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
+    return MaterialApp(title: appTitle, home: HomePage(title: appTitle));
+  }
+}
+
+class HomePage extends StatelessWidget {
+  final String title;
+  HomePage({Key key, this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
       appBar: AppBar(
-        title: Text("pole app"),
+        title: Text(title),
+      ),
+      bottomNavigationBar: BottomSheet(
+        builder: (BuildContext context) {
+          return Container(
+            child: Text("text1"),
+          );
+        },
+        onClosing: () {
+          print("close");
+        },
       ),
       body: Column(
         children: <Widget>[
@@ -18,9 +38,7 @@ class MyApp extends StatelessWidget {
           )
         ],
       ),
-    )
-        //home: new MainPage(title: 'poke app')
-        );
+    );
   }
 }
 
@@ -160,17 +178,17 @@ class _MainPageState extends State<MainPage> {
             ),
           ],
         ),
-        Container(
-          height: 50,
-          width: 50,
-          padding: EdgeInsets.all(10.0),
-          child: buildDraggable("images/001.png"),
-        ),
-        Container(
-          height: 50,
-          width: 50,
-          padding: EdgeInsets.all(10.0),
-          child: buildDraggable("images/333.png"),
+        Expanded(
+          child: GridView.count(
+            crossAxisCount: 6,
+            children: <Widget>[
+              buildDraggable("images/001.png"),
+              buildDraggable("images/002.png"),
+              buildDraggable("images/003.png"),
+              buildDraggable("images/004.png"),
+              buildDraggable("images/005.png"),
+            ],
+          ),
         ),
       ],
     );
@@ -207,22 +225,9 @@ class _PokeBoxState extends State<PokeBox> {
 
 Draggable buildDraggable(String data1) => new Draggable(
       data: data1,
-      child: Image.asset(data1, fit: BoxFit.cover, height: 50, width: 50),
+      child: Image.asset(data1, height: 50, width: 50),
       feedback: Image.asset(data1, fit: BoxFit.cover, height: 50, width: 50),
     );
-
-//DragTarget buildDragTarget(String data1) => new DragTarget(
-//  builder: (context, candidateData, rejectedData) {
-//    print("DragTarget: $candidateData data1: $data1");
-//    return Image.asset(data1, height: 50, width: 50);
-//  },
-//  onAccept: (data){
-//
-//  },
-//  onLeave: (data){
-//    print("leave");
-//  },
-//);
 
 Widget _calcArea() {
   return Container(
