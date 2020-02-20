@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'pokedata.dart';
 
 void main() => runApp(MyApp());
 
@@ -30,14 +31,7 @@ class HomePage extends StatelessWidget {
           print("close");
         },
       ),
-      body: Column(
-        children: <Widget>[
-          _calcArea(),
-          Expanded(
-            child: new MainPage(title: "poke app"),
-          )
-        ],
-      ),
+      body: new MainPage(title: "poke app"),
     );
   }
 }
@@ -62,133 +56,223 @@ class _MainPageState extends State<MainPage> {
   String enemyData4 = "images/010.png";
   String enemyData5 = "images/011.png";
   String enemyData6 = "images/012.png";
+  String targetData = "images/000.png";
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return new Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Row(
+        Column(
           children: <Widget>[
-            Expanded(
-              child: Table(
-                border: TableBorder.all(),
-                children: [
-                  TableRow(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(10.0),
-                        child: PokeBox(img: myData1),
-                      ),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(10.0),
-                        child: PokeBox(img: myData2),
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(10.0),
-                        child: PokeBox(img: myData3),
-                      ),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(10.0),
-                        child: PokeBox(img: myData4),
-                      ),
-                    ],
-                  ),
-                  TableRow(children: [
-                    Container(
-                      height: 50,
-                      width: 50,
-                      padding: EdgeInsets.all(10.0),
-                      child: PokeBox(img: myData5),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 50,
-                      padding: EdgeInsets.all(10.0),
-                      child: PokeBox(img: myData6),
-                    ),
-                  ])
-                ],
+            Container(
+              height: 50,
+              width: size.width,
+              child: BaseStatsArea(
+                pokeId: targetData,
               ),
             ),
-            Expanded(
-              child: Table(
-                border: TableBorder.all(),
-                children: [
-                  TableRow(
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Table(
+                    border: TableBorder.all(),
                     children: [
-                      Container(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(10.0),
-                        child: PokeBox(img: enemyData1),
+                      TableRow(
+                        children: [
+                          Container(
+                            height: 50,
+                            width: 50,
+                            padding: EdgeInsets.all(10.0),
+                            child: GestureDetector(
+                              child: PokeBox(img: myData1),
+                              onTap: () {
+                                setState(() {
+                                  targetData = myData1;
+                                  print(myData1);
+                                  _BaseStatsAreaState.of(context).display(myData1);
+                                });
+                              },
+                            ),
+                          ),
+                          Container(
+                            height: 50,
+                            width: 50,
+                            padding: EdgeInsets.all(10.0),
+                            child: GestureDetector(
+                              child: PokeBox(img: myData2),
+                              onTap: () {
+                                setState(() {
+                                  targetData = myData2;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(10.0),
-                        child: PokeBox(img: enemyData2),
+                      TableRow(
+                        children: [
+                          Container(
+                            height: 50,
+                            width: 50,
+                            padding: EdgeInsets.all(10.0),
+                            child: GestureDetector(
+                              child: PokeBox(img: myData3),
+                              onTap: () {
+                                setState(() {
+                                  targetData = myData3;
+                                });
+                              },
+                            ),
+                          ),
+                          Container(
+                            height: 50,
+                            width: 50,
+                            padding: EdgeInsets.all(10.0),
+                            child: GestureDetector(
+                              child: PokeBox(img: myData4),
+                              onTap: () {
+                                setState(() {
+                                  targetData = myData4;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
+                      TableRow(children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          padding: EdgeInsets.all(10.0),
+                          child: GestureDetector(
+                            child: PokeBox(img: myData5),
+                            onTap: () {
+                              setState(() {
+                                targetData = myData5;
+                              });
+                            },
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: 50,
+                          padding: EdgeInsets.all(10.0),
+                          child: GestureDetector(
+                            child: PokeBox(img: myData6),
+                            onTap: () {
+                              setState(() {
+                                targetData = myData6;
+                              });
+                            },
+                          ),
+                        ),
+                      ])
                     ],
                   ),
-                  TableRow(
+                ),
+                Expanded(
+                  child: Table(
+                    border: TableBorder.all(),
                     children: [
-                      Container(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(10.0),
-                        child: PokeBox(img: enemyData3),
+                      TableRow(
+                        children: [
+                          Container(
+                            height: 50,
+                            width: 50,
+                            padding: EdgeInsets.all(10.0),
+                            child: GestureDetector(
+                              child: PokeBox(img: enemyData1),
+                              onTap: () {
+                                setState(() {
+                                  targetData = enemyData1;
+                                });
+                              },
+                            ),
+                          ),
+                          Container(
+                            height: 50,
+                            width: 50,
+                            padding: EdgeInsets.all(10.0),
+                            child: GestureDetector(
+                              child: PokeBox(img: enemyData2),
+                              onTap: () {
+                                setState(() {
+                                  targetData = enemyData2;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(10.0),
-                        child: PokeBox(img: enemyData4),
+                      TableRow(
+                        children: [
+                          Container(
+                            height: 50,
+                            width: 50,
+                            padding: EdgeInsets.all(10.0),
+                            child: GestureDetector(
+                              child: PokeBox(img: enemyData3),
+                              onTap: () {
+                                setState(() {
+                                  targetData = enemyData3;
+                                });
+                              },
+                            ),
+                          ),
+                          Container(
+                            height: 50,
+                            width: 50,
+                            padding: EdgeInsets.all(10.0),
+                            child: GestureDetector(
+                              child: PokeBox(img: enemyData4),
+                              onTap: () {
+                                setState(() {
+                                  targetData = enemyData4;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
+                      TableRow(children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          padding: EdgeInsets.all(10.0),
+                          child: GestureDetector(
+                            child: PokeBox(img: enemyData5),
+                            onTap: () {
+                              setState(() {
+                                targetData = enemyData5;
+                              });
+                            },
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: 50,
+                          padding: EdgeInsets.all(10.0),
+                          child: GestureDetector(
+                            child: PokeBox(img: enemyData6),
+                            onTap: () {
+                              setState(() {
+                                targetData = enemyData6;
+                              });
+                            },
+                          ),
+                        ),
+                      ])
                     ],
                   ),
-                  TableRow(children: [
-                    Container(
-                      height: 50,
-                      width: 50,
-                      padding: EdgeInsets.all(10.0),
-                      child: PokeBox(img: enemyData5),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 50,
-                      padding: EdgeInsets.all(10.0),
-                      child: PokeBox(img: enemyData6),
-                    ),
-                  ])
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
         Expanded(
-          child: GridView.count(
-            crossAxisCount: 6,
-            children: <Widget>[
-              buildDraggable("images/001.png"),
-              buildDraggable("images/002.png"),
-              buildDraggable("images/003.png"),
-              buildDraggable("images/004.png"),
-              buildDraggable("images/005.png"),
-            ],
-          ),
+          child: pokeArea(),
         ),
       ],
     );
@@ -213,7 +297,9 @@ class _PokeBoxState extends State<PokeBox> {
   Widget build(BuildContext context) {
     return new DragTarget(
       builder: (context, candidateData, rejectedData) {
-        return Image.asset(boxPoke, height: 50, width: 50);
+        return GestureDetector(
+          child: Image.asset(boxPoke, height: 50, width: 50),
+        );
       },
       onAccept: (data) {
         changeData(data);
@@ -223,24 +309,56 @@ class _PokeBoxState extends State<PokeBox> {
   }
 }
 
-Draggable buildDraggable(String data1) => new Draggable(
-      data: data1,
-      child: Image.asset(data1, height: 50, width: 50),
-      feedback: Image.asset(data1, fit: BoxFit.cover, height: 50, width: 50),
-    );
+class BaseStatsArea extends StatefulWidget {
+  final String pokeId;
+  BaseStatsArea({Key key, this.pokeId}) : super(key: key);
+  @override
+  _BaseStatsAreaState createState() => new _BaseStatsAreaState(pokeId: pokeId);
+}
 
-Widget _calcArea() {
-  return Container(
-    height: 20.0,
-    child: Row(
+class _BaseStatsAreaState extends State<BaseStatsArea> {
+  final String pokeId;
+  var baseStatsList = [];
+  _BaseStatsAreaState({this.pokeId});
+
+  void display(String data) {
+    setState(() {
+      baseStatsList = baseCalc(data);
+    });
+  }
+
+  static _BaseStatsAreaState of(BuildContext context) {
+    return context.findAncestorStateOfType<State<BaseStatsArea>>();
+  }
+
+  baseCalc(String data) {
+    print("data: $data");
+    String substr = data.substring(7, data.length - 4);
+    int subdbl;
+    try {
+      subdbl = int.parse(substr);
+    } catch (exception) {
+      subdbl = 0;
+      print("error data is not double");
+    }
+    var list = new List.generate(6, (i) => subdbl);
+    return list;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    display(pokeId);
+    print("build baseStats $pokeId");
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        Text("H"),
-        Text("A"),
-        Text("B"),
-        Text("C"),
-        Text("D"),
-        Text("S"),
+        BaseStatsBox("H", baseStatsList[0]),
+        BaseStatsBox("A", baseStatsList[1]),
+        BaseStatsBox("B", baseStatsList[2]),
+        BaseStatsBox("C", baseStatsList[3]),
+        BaseStatsBox("D", baseStatsList[4]),
+        BaseStatsBox("S", baseStatsList[5]),
       ],
-    ),
-  );
+    );
+  }
 }
