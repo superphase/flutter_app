@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart' as sqflite;
-//path.join();
-import 'pokedata.dart';
+import 'dart:async';
+import 'database_helper.dart';
 
 void main() => runApp(MyApp());
 
@@ -110,67 +113,76 @@ class HomePage extends StatelessWidget {
       builder: (context, pokeBoxProvider, _) {
         return Scaffold(
           body: Column(
-            mainAxisSize: MainAxisSize.min,
+            //mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Card(
                 child: Container(
                   width: size.width,
                   height: heightUnit * 2,
-                  child: WidgetBaseStats(img: pokeBoxProvider._targetData),
+                  color: Colors.amberAccent,
+                  child: WidgetBaseStats(),
                 ),
               ),
-              Card(
-                child: Container(
-                  width: size.width,
-                  height: heightUnit * 6,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Table(
-                          border: TableBorder.all(),
-                          children: [
-                            TableRow(children: [
-                              PokeBoxArea(boxId: "box1"),
-                              PokeBoxArea(boxId: "box2"),
-                            ]),
-                            TableRow(children: [
-                              PokeBoxArea(boxId: "box3"),
-                              PokeBoxArea(boxId: "box4"),
-                            ]),
-                            TableRow(children: [
-                              PokeBoxArea(boxId: "box5"),
-                              PokeBoxArea(boxId: "box6"),
-                            ]),
-                          ],
-                        ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Card(
+                    child: Container(
+                      width: 0.9 * size.width / 2,
+                      height: heightUnit * 6,
+                      color: Colors.green,
+                      child: Table(
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.bottom,
+                        children: [
+                          TableRow(children: [
+                            PokeBoxArea(boxId: "box1"),
+                            PokeBoxArea(boxId: "box2"),
+                          ]),
+                          TableRow(children: [
+                            PokeBoxArea(boxId: "box3"),
+                            PokeBoxArea(boxId: "box4"),
+                          ]),
+                          TableRow(children: [
+                            PokeBoxArea(boxId: "box5"),
+                            PokeBoxArea(boxId: "box6"),
+                          ]),
+                        ],
                       ),
-                      Expanded(
-                        child: Table(
-                          border: TableBorder.all(),
-                          children: [
-                            TableRow(children: [
-                              PokeBoxArea(boxId: "box7"),
-                              PokeBoxArea(boxId: "box8"),
-                            ]),
-                            TableRow(children: [
-                              PokeBoxArea(boxId: "box9"),
-                              PokeBoxArea(boxId: "box10"),
-                            ]),
-                            TableRow(children: [
-                              PokeBoxArea(boxId: "box11"),
-                              PokeBoxArea(boxId: "box12"),
-                            ]),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  Card(
+                    child: Container(
+                      width: 0.9 * size.width / 2,
+                      height: heightUnit * 6,
+                      color: Colors.lightBlue,
+                      child: Table(
+                        defaultColumnWidth: const FlexColumnWidth(1.0),
+                        children: [
+                          TableRow(children: [
+                            PokeBoxArea(boxId: "box7"),
+                            PokeBoxArea(boxId: "box8"),
+                          ]),
+                          TableRow(children: [
+                            PokeBoxArea(boxId: "box9"),
+                            PokeBoxArea(boxId: "box10"),
+                          ]),
+                          TableRow(children: [
+                            PokeBoxArea(boxId: "box11"),
+                            PokeBoxArea(boxId: "box12"),
+                          ]),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Card(
                 child: Container(
+                  color: Colors.lightGreenAccent,
                   width: size.width,
-                  height: heightUnit * 5,
+                  height: heightUnit * 4,
                   child: PokeArea(),
                 ),
               ),
@@ -229,12 +241,12 @@ class PokeBoxArea extends StatelessWidget {
             break;
         }
         return Container(
-          height: 50,
-          width: 50,
-          padding: EdgeInsets.all(10.0),
+          height: 45,
+          color: Colors.lightGreenAccent,
+          margin: EdgeInsets.all(4.0),
           child: DragTarget(builder: (context, candidateData, rejectedData) {
             return GestureDetector(
-                child: Image.asset(img, height: 50, width: 50),
+                child: Image.asset(img),
                 onTap: () => pokeBoxProvider.setterTargetData(img));
           }, onAccept: (data) {
             switch (boxId) {
@@ -283,42 +295,133 @@ class PokeBoxArea extends StatelessWidget {
 }
 
 class WidgetBaseStats extends StatelessWidget {
-  WidgetBaseStats({Key key, this.img}) : super(key: key);
-  final String img;
+  WidgetBaseStats({Key key}) : super(key: key);
 
-  List baseCalc(String data) {
-    print("data: $data");
-    String subStr = data.substring(7, data.length - 4);
-    int subDbl;
+  Future _getBaseStatsList(String data) async {
+    int pokeId;
     try {
-      subDbl = int.parse(subStr);
+      pokeId = int.parse(data.substring(7, data.length - 4));
+      print(pokeId);
     } catch (exception) {
-      subDbl = 0;
-      print("error data is not double");
+      pokeId = 0;
+      print("error data is not int");
     }
-    var list = new List.generate(6, (i) => subDbl);
-    return list;
+    return await _query(pokeId);
   }
+
+  _query(int pId) async {
+    print(pId);
+    // get a reference to the database
+    sqflite.Database db = await DatabaseHelper.instance.database;
+
+    // get single row
+    List<String> columnsToSelect = [
+      DatabaseHelper.columnId,
+      DatabaseHelper.columnName,
+      DatabaseHelper.columnH,
+      DatabaseHelper.columnA,
+      DatabaseHelper.columnB,
+      DatabaseHelper.columnC,
+      DatabaseHelper.columnD,
+      DatabaseHelper.columnS,
+      DatabaseHelper.columnType1,
+      DatabaseHelper.columnType2,
+      DatabaseHelper.columnAbility1,
+      DatabaseHelper.columnAbility2,
+      DatabaseHelper.columnAbility3,
+    ];
+    String whereString = '${DatabaseHelper.columnPokeId} = ?';
+    List<dynamic> whereArguments = [pId];
+    List<Map> result = await db.query(DatabaseHelper.table,
+        columns: columnsToSelect,
+        where: whereString,
+        whereArgs: whereArguments);
+
+    return [result[0][DatabaseHelper.columnH], result[0][DatabaseHelper.columnA], result[0][DatabaseHelper.columnB], result[0][DatabaseHelper.columnC], result[0][DatabaseHelper.columnD], result[0][DatabaseHelper.columnS]];
+  }
+
+  /*
+  _query(String id) async {
+    //sqflite.Database db = await DatabaseHelper.instance.database;
+    List<String> columnToSelect = [
+      DatabaseHelper.columnId,
+      DatabaseHelper.columnName,
+      DatabaseHelper.columnH,
+      DatabaseHelper.columnA,
+      DatabaseHelper.columnB,
+      DatabaseHelper.columnC,
+      DatabaseHelper.columnD,
+      DatabaseHelper.columnS,
+      DatabaseHelper.columnType1,
+      DatabaseHelper.columnType2,
+      DatabaseHelper.columnAbility1,
+      DatabaseHelper.columnAbility2,
+      DatabaseHelper.columnAbility3,
+    ];
+    String whereString = "${DatabaseHelper.columnId} = ?";
+    int rowId = 1;
+    List<dynamic> whereArguments = [rowId];
+
+    List<Map> result = await db.query(DatabaseHelper.table,
+        columns: columnToSelect, where: whereString, whereArgs: whereArguments);
+    List<Map> result =
+        await db.query("pokedata");
+    List resultList =
+    return result;
+    var dbDir = await sqflite.getDatabasesPath();
+    var dbPath = path.join(dbDir, "app.db");
+    ByteData data = await rootBundle.load("db/pokedata.db");
+    List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    await File(dbPath).writeAsBytes(bytes);
+    var db = await sqflite.openDatabase(dbPath);
+    await db.query('pokedata', )
+
+    //List<Map> result = await db.query(DatabaseHelper.table);
+    //result.forEach((row) => print(row));
+  }
+*/
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final List baseStatsList = baseCalc(img);
     return Consumer<PokeBoxProvider>(builder: (context, pokeBoxProvider, _) {
-      return Container(
-        height: 50,
-        width: size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _BaseStatsBox(valueName: "H", value: baseStatsList[0]),
-            _BaseStatsBox(valueName: "A", value: baseStatsList[1]),
-            _BaseStatsBox(valueName: "B", value: baseStatsList[2]),
-            _BaseStatsBox(valueName: "C", value: baseStatsList[3]),
-            _BaseStatsBox(valueName: "D", value: baseStatsList[4]),
-            _BaseStatsBox(valueName: "S", value: baseStatsList[5]),
-          ],
-        ),
+      return FutureBuilder(
+        future: _getBaseStatsList(pokeBoxProvider._targetData, ),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Container(
+              height: 50,
+              width: size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _BaseStatsBox(valueName: "H", value: snapshot.data[0]),
+                  _BaseStatsBox(valueName: "A", value: snapshot.data[0]),
+                  _BaseStatsBox(valueName: "B", value: snapshot.data[0]),
+                  _BaseStatsBox(valueName: "C", value: snapshot.data[0]),
+                  _BaseStatsBox(valueName: "D", value: snapshot.data[0]),
+                  _BaseStatsBox(valueName: "S", value: snapshot.data[0]),
+                ],
+              ),
+            );
+          } else {
+            return Container(
+              height: 50,
+              width: size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _BaseStatsBox(valueName: "H", value: 0),
+                  _BaseStatsBox(valueName: "A", value: 0),
+                  _BaseStatsBox(valueName: "B", value: 0),
+                  _BaseStatsBox(valueName: "C", value: 0),
+                  _BaseStatsBox(valueName: "D", value: 0),
+                  _BaseStatsBox(valueName: "S", value: 0),
+                ],
+              ),
+            );
+          }
+        },
       );
     });
   }
@@ -335,8 +438,11 @@ class _BaseStatsBox extends StatelessWidget {
       height: 40,
       width: 40,
       child: Card(
-        child: Center(
-          child: Text(valueName + value.toString()),
+        child: Column(
+          children: <Widget>[
+            Text(valueName),
+            Text(value.toString()),
+          ],
         ),
         color: Colors.orange,
       ),
@@ -347,7 +453,7 @@ class _BaseStatsBox extends StatelessWidget {
 LongPressDraggable buildDraggable(String data1) => new LongPressDraggable(
       data: data1,
       child: Image.asset(data1, height: 50, width: 50),
-      feedback: Image.asset(data1, fit: BoxFit.cover, height: 50, width: 50),
+      feedback: Image.asset(data1, fit: BoxFit.cover, height: 60, width: 60),
     );
 
 class PokeArea extends StatelessWidget {
@@ -355,6 +461,7 @@ class PokeArea extends StatelessWidget {
   Widget build(BuildContext context) {
     final pokeState = Provider.of<PokeBoxProvider>(context, listen: false);
     return GridView.count(
+      primary: false,
       crossAxisCount: 6,
       children: <Widget>[
         buildDraggable("images/001.png"),
