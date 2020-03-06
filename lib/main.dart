@@ -337,56 +337,24 @@ class WidgetBaseStats extends StatelessWidget {
         where: whereString,
         whereArgs: whereArguments);
 
-    return [result[0][DatabaseHelper.columnH], result[0][DatabaseHelper.columnA], result[0][DatabaseHelper.columnB], result[0][DatabaseHelper.columnC], result[0][DatabaseHelper.columnD], result[0][DatabaseHelper.columnS]];
-  }
-
-  /*
-  _query(String id) async {
-    //sqflite.Database db = await DatabaseHelper.instance.database;
-    List<String> columnToSelect = [
-      DatabaseHelper.columnId,
-      DatabaseHelper.columnName,
-      DatabaseHelper.columnH,
-      DatabaseHelper.columnA,
-      DatabaseHelper.columnB,
-      DatabaseHelper.columnC,
-      DatabaseHelper.columnD,
-      DatabaseHelper.columnS,
-      DatabaseHelper.columnType1,
-      DatabaseHelper.columnType2,
-      DatabaseHelper.columnAbility1,
-      DatabaseHelper.columnAbility2,
-      DatabaseHelper.columnAbility3,
+    return [
+      result[0][DatabaseHelper.columnH],
+      result[0][DatabaseHelper.columnA],
+      result[0][DatabaseHelper.columnB],
+      result[0][DatabaseHelper.columnC],
+      result[0][DatabaseHelper.columnD],
+      result[0][DatabaseHelper.columnS]
     ];
-    String whereString = "${DatabaseHelper.columnId} = ?";
-    int rowId = 1;
-    List<dynamic> whereArguments = [rowId];
-
-    List<Map> result = await db.query(DatabaseHelper.table,
-        columns: columnToSelect, where: whereString, whereArgs: whereArguments);
-    List<Map> result =
-        await db.query("pokedata");
-    List resultList =
-    return result;
-    var dbDir = await sqflite.getDatabasesPath();
-    var dbPath = path.join(dbDir, "app.db");
-    ByteData data = await rootBundle.load("db/pokedata.db");
-    List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-    await File(dbPath).writeAsBytes(bytes);
-    var db = await sqflite.openDatabase(dbPath);
-    await db.query('pokedata', )
-
-    //List<Map> result = await db.query(DatabaseHelper.table);
-    //result.forEach((row) => print(row));
   }
-*/
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Consumer<PokeBoxProvider>(builder: (context, pokeBoxProvider, _) {
       return FutureBuilder(
-        future: _getBaseStatsList(pokeBoxProvider._targetData, ),
+        future: _getBaseStatsList(
+          pokeBoxProvider._targetData,
+        ),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Container(
@@ -396,11 +364,11 @@ class WidgetBaseStats extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   _BaseStatsBox(valueName: "H", value: snapshot.data[0]),
-                  _BaseStatsBox(valueName: "A", value: snapshot.data[0]),
-                  _BaseStatsBox(valueName: "B", value: snapshot.data[0]),
-                  _BaseStatsBox(valueName: "C", value: snapshot.data[0]),
-                  _BaseStatsBox(valueName: "D", value: snapshot.data[0]),
-                  _BaseStatsBox(valueName: "S", value: snapshot.data[0]),
+                  _BaseStatsBox(valueName: "A", value: snapshot.data[1]),
+                  _BaseStatsBox(valueName: "B", value: snapshot.data[2]),
+                  _BaseStatsBox(valueName: "C", value: snapshot.data[3]),
+                  _BaseStatsBox(valueName: "D", value: snapshot.data[4]),
+                  _BaseStatsBox(valueName: "S", value: snapshot.data[5]),
                 ],
               ),
             );
