@@ -6,9 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart' as sqflite;
 import 'dart:async';
+import 'dart:math' as math;
 import 'database_helper.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(ChangeNotifierProvider(
+      create: (_) => AppTheme(),
+      child: const MyApp(),
+    ));
 
 class PokeBoxProvider extends ChangeNotifier {
   String _myData1 = "images/000.png";
@@ -24,6 +28,7 @@ class PokeBoxProvider extends ChangeNotifier {
   String _enemyData5 = "images/000.png";
   String _enemyData6 = "images/000.png";
   String _targetData = "images/000.png";
+  String _pokeAreaType = "ノーマル";
 
   void setterMyData1(String data) {
     this._myData1 = data;
@@ -89,29 +94,117 @@ class PokeBoxProvider extends ChangeNotifier {
     this._targetData = data;
     notifyListeners();
   }
+
+  void setterPokeAreaType(String data) {
+    this._pokeAreaType = data;
+    print('setter=$data');
+    notifyListeners();
+  }
+
+  getColor(String type) {
+    switch (type) {
+      case 'ノーマル':
+        return Colors.grey;
+      case 'ほのお':
+        return Colors.redAccent;
+      case 'みず':
+        return Colors.blue;
+      case 'でんき':
+        return Colors.yellow;
+      case 'くさ':
+        return Colors.green;
+      case 'こおり':
+        return Colors.cyanAccent;
+      case 'かくとう':
+        return Colors.pink;
+      case 'どく':
+        return Colors.deepPurpleAccent[100];
+      case 'じめん':
+        return Colors.brown[700];
+      case 'ひこう':
+        return Colors.lightBlue[50];
+      case 'エスパー':
+        return Colors.purpleAccent;
+      case 'むし':
+        return Colors.lightGreenAccent;
+      case 'いわ':
+        return Colors.brown[300];
+      case 'ゴースト':
+        return Colors.deepPurple[700];
+      case 'ドラゴン':
+        return Colors.deepPurple;
+      case 'あく':
+        return Colors.black;
+      case 'はがね':
+        return Colors.blueGrey;
+      case 'フェアリー':
+        return Colors.pinkAccent;
+    }
+  }
+}
+
+class AppTheme extends ChangeNotifier {
+  AppTheme() : _isDark = false;
+
+  bool get isDark => _isDark;
+  bool _isDark;
+
+  ThemeData buildTheme() => _isDark ? ThemeData.dark() : ThemeData.light();
+
+  void changeMode() {
+    _isDark = !_isDark;
+    notifyListeners();
+  }
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "poke app",
+      theme: Provider.of<AppTheme>(context).buildTheme(),
+      darkTheme: ThemeData.dark(),
       home: ChangeNotifierProvider<PokeBoxProvider>(
         create: (content) => PokeBoxProvider(),
-        child: HomePage(),
+        child: const HomePage(),
       ),
     );
   }
 }
 
 class HomePage extends StatelessWidget {
+  const HomePage({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<AppTheme>(context);
     final Size size = MediaQuery.of(context).size;
     final double heightUnit = size.height / 16;
+    final double baseStatsHeight = heightUnit * 3;
+    final double pokeBoxHeight = heightUnit * 6;
+    final double pokeAreaHeight = heightUnit * 5;
     return Consumer<PokeBoxProvider>(
       builder: (context, pokeBoxProvider, _) {
         return Scaffold(
+          drawer: Container(
+            width: size.width * 0.8,
+            child: Drawer(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                    size.width * 0.7, heightUnit * 15, 1.0, 1.0),
+                child: GestureDetector(
+                  child: Icon(
+                    IconData(
+                      58281,
+                      fontFamily: 'MaterialIcons',
+                    ),
+                  ),
+                  onTap: () => theme.changeMode(),
+                ),
+              ),
+            ),
+          ),
+
           body: Column(
             //mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.end,
@@ -119,7 +212,7 @@ class HomePage extends StatelessWidget {
               Card(
                 child: Container(
                   width: size.width,
-                  height: heightUnit * 2,
+                  height: baseStatsHeight,
                   color: Colors.amberAccent,
                   child: WidgetBaseStats(),
                 ),
@@ -130,7 +223,7 @@ class HomePage extends StatelessWidget {
                   Card(
                     child: Container(
                       width: 0.9 * size.width / 2,
-                      height: heightUnit * 6,
+                      height: pokeBoxHeight,
                       color: Colors.green,
                       child: Table(
                         defaultVerticalAlignment:
@@ -155,7 +248,7 @@ class HomePage extends StatelessWidget {
                   Card(
                     child: Container(
                       width: 0.9 * size.width / 2,
-                      height: heightUnit * 6,
+                      height: pokeBoxHeight,
                       color: Colors.lightBlue,
                       child: Table(
                         defaultColumnWidth: const FlexColumnWidth(1.0),
@@ -182,8 +275,8 @@ class HomePage extends StatelessWidget {
                 child: Container(
                   color: Colors.lightGreenAccent,
                   width: size.width,
-                  height: heightUnit * 4,
-                  child: PokeArea(),
+                  height: pokeAreaHeight,
+                  child: PokeArea2(),
                 ),
               ),
             ],
@@ -298,19 +391,11 @@ class WidgetBaseStats extends StatelessWidget {
   WidgetBaseStats({Key key}) : super(key: key);
 
   Future _getBaseStatsList(String data) async {
-    int pokeId;
-    try {
-      pokeId = int.parse(data.substring(7, data.length - 4));
-      print(pokeId);
-    } catch (exception) {
-      pokeId = 0;
-      print("error data is not int");
-    }
-    return await _query(pokeId);
+    return await _query(data.substring(7, data.length - 4));
   }
 
-  _query(int pId) async {
-    print(pId);
+  _query(String pId) async {
+    print('_query.pId=$pId');
     // get a reference to the database
     sqflite.Database db = await DatabaseHelper.instance.database;
 
@@ -338,13 +423,34 @@ class WidgetBaseStats extends StatelessWidget {
         whereArgs: whereArguments);
 
     return [
+      result[0][DatabaseHelper.columnName],
       result[0][DatabaseHelper.columnH],
       result[0][DatabaseHelper.columnA],
       result[0][DatabaseHelper.columnB],
       result[0][DatabaseHelper.columnC],
       result[0][DatabaseHelper.columnD],
-      result[0][DatabaseHelper.columnS]
+      result[0][DatabaseHelper.columnS],
+      result[0][DatabaseHelper.columnType1],
+      result[0][DatabaseHelper.columnType2],
+      result[0][DatabaseHelper.columnAbility1],
+      result[0][DatabaseHelper.columnAbility2],
+      result[0][DatabaseHelper.columnAbility3],
     ];
+  }
+
+  _checkNull(data) {
+    if (data == null) {
+      return Text(' ');
+    } else {
+      return Text(
+        '$data ',
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      );
+    }
   }
 
   @override
@@ -358,20 +464,36 @@ class WidgetBaseStats extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Container(
-              height: 50,
-              width: size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  _BaseStatsBox(valueName: "H", value: snapshot.data[0]),
-                  _BaseStatsBox(valueName: "A", value: snapshot.data[1]),
-                  _BaseStatsBox(valueName: "B", value: snapshot.data[2]),
-                  _BaseStatsBox(valueName: "C", value: snapshot.data[3]),
-                  _BaseStatsBox(valueName: "D", value: snapshot.data[4]),
-                  _BaseStatsBox(valueName: "S", value: snapshot.data[5]),
-                ],
-              ),
-            );
+                height: size.width,
+                width: size.width * 3 / 16,
+                color: Colors.amberAccent,
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        _checkNull(snapshot.data[0]),
+                        _checkNull(snapshot.data[7]),
+                        _checkNull(snapshot.data[8]),
+                      ],
+                    ),
+                    Row(children: <Widget>[
+                      _checkNull(snapshot.data[9]),
+                      _checkNull(snapshot.data[10]),
+                      _checkNull(snapshot.data[11]),
+                    ]),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        _BaseStatsBox(valueName: "H", value: snapshot.data[1]),
+                        _BaseStatsBox(valueName: "A", value: snapshot.data[2]),
+                        _BaseStatsBox(valueName: "B", value: snapshot.data[3]),
+                        _BaseStatsBox(valueName: "C", value: snapshot.data[4]),
+                        _BaseStatsBox(valueName: "D", value: snapshot.data[5]),
+                        _BaseStatsBox(valueName: "S", value: snapshot.data[6]),
+                      ],
+                    ),
+                  ],
+                ));
           } else {
             return Container(
               height: 50,
@@ -408,8 +530,15 @@ class _BaseStatsBox extends StatelessWidget {
       child: Card(
         child: Column(
           children: <Widget>[
-            Text(valueName),
-            Text(value.toString()),
+            Text(
+              valueName,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              value.toString(),
+            ),
           ],
         ),
         color: Colors.orange,
@@ -424,6 +553,159 @@ LongPressDraggable buildDraggable(String data1) => new LongPressDraggable(
       feedback: Image.asset(data1, fit: BoxFit.cover, height: 60, width: 60),
     );
 
+class PokeArea2 extends StatelessWidget {
+  PokeArea2({Key key}) : super(key: key);
+  var list = [
+    TypeBox('ノーマル'),
+    TypeBox('ほのお'),
+    TypeBox('みず'),
+    TypeBox('でんき'),
+    TypeBox('くさ'),
+    TypeBox('こおり'),
+    TypeBox('かくとう'),
+    TypeBox('どく'),
+    TypeBox('じめん'),
+    TypeBox('ひこう'),
+    TypeBox('エスパー'),
+    TypeBox('むし'),
+    TypeBox('いわ'),
+    TypeBox('ゴースト'),
+    TypeBox('ドラゴン'),
+    TypeBox('あく'),
+    TypeBox('はがね'),
+    TypeBox('フェアリー'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    final pokeState = Provider.of<PokeBoxProvider>(context, listen: false);
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Expanded(
+            flex: 1,
+            child: GridView.count(
+              primary: false,
+              padding: EdgeInsets.all(0.0),
+              crossAxisCount: 1,
+              childAspectRatio: 2,
+              children: list,
+            )),
+        Expanded(
+          flex: 5,
+          child: SelectedPokeArea(),
+        ),
+      ],
+    );
+  }
+}
+
+class SelectedPokeArea extends StatelessWidget {
+  SelectedPokeArea({Key key}) : super(key: key);
+
+  Future _getPokeAreaList(String type) async {
+    //print('_query.Type=$type');
+
+    sqflite.Database db = await DatabaseHelper.instance.database;
+
+    // get single row
+    List<String> columnsToSelect = [
+      DatabaseHelper.columnId,
+      DatabaseHelper.columnPokeId,
+      DatabaseHelper.columnName,
+      DatabaseHelper.columnH,
+      DatabaseHelper.columnA,
+      DatabaseHelper.columnB,
+      DatabaseHelper.columnC,
+      DatabaseHelper.columnD,
+      DatabaseHelper.columnS,
+      DatabaseHelper.columnType1,
+      DatabaseHelper.columnType2,
+      DatabaseHelper.columnAbility1,
+      DatabaseHelper.columnAbility2,
+      DatabaseHelper.columnAbility3,
+    ];
+    String whereString =
+        '${DatabaseHelper.columnType1} = ? or ${DatabaseHelper.columnType2} = ?';
+    List<dynamic> whereArguments = [type, type];
+    List<Map> result = await db.query(DatabaseHelper.table,
+        columns: columnsToSelect,
+        where: whereString,
+        whereArgs: whereArguments);
+
+    var pokeList = [];
+    result.forEach((mapData) =>
+        pokeList.add('images/${mapData[DatabaseHelper.columnPokeId]}.png'));
+    //print(pokeList);
+    return pokeList;
+  }
+
+  static _createList(List pokeList) {
+    List<LongPressDraggable> list = [];
+    pokeList.forEach((data) => list.add(buildDraggable(data)));
+    //print(list);
+    return list;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<PokeBoxProvider>(builder: (context, pokeBoxProvider, _) {
+      return FutureBuilder(
+        future: _getPokeAreaList(pokeBoxProvider._pokeAreaType),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Container(
+              color: pokeBoxProvider.getColor(pokeBoxProvider._pokeAreaType),
+              child: GridView.count(
+                padding: EdgeInsets.all(0.0),
+                crossAxisCount: 5,
+                children: _createList(snapshot.data),
+              ),
+            );
+          } else {
+            return Text('');
+          }
+        },
+      );
+    });
+  }
+}
+
+class TypeBox extends StatelessWidget {
+  final type;
+  TypeBox(this.type);
+
+  _textColorChange(type) {
+    if (type == 'でんき' || type == 'こおり' || type == 'ひこう' || type == 'むし') {
+      return Colors.black;
+    }
+    return Colors.white;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    final pokeState = Provider.of<PokeBoxProvider>(context, listen: false);
+    return GestureDetector(
+      onTap: () => pokeState.setterPokeAreaType(type),
+      child: Container(
+        color: pokeState.getColor(type),
+        child: Center(
+          child: Text(
+            type,
+            style: TextStyle(
+              fontSize: 6,
+              color: _textColorChange(type),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*
 class PokeArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -585,8 +867,10 @@ class PokeArea extends StatelessWidget {
         buildDraggable("images/151.png"),
         buildDraggable("images/152.png"),
         buildDraggable("images/153.png"),
-        buildDraggable("images/154.png"),
-        buildDraggable("images/155.png"),
+        buildDraggable("images/154-1.png"),
+        buildDraggable("images/154-2.png"),
+        buildDraggable("images/155-1.png"),
+        buildDraggable("images/155-2.png"),
         buildDraggable("images/156.png"),
         buildDraggable("images/157.png"),
         buildDraggable("images/158.png"),
@@ -613,7 +897,8 @@ class PokeArea extends StatelessWidget {
         buildDraggable("images/179.png"),
         buildDraggable("images/180.png"),
         buildDraggable("images/181.png"),
-        buildDraggable("images/182.png"),
+        buildDraggable("images/182-1.png"),
+        buildDraggable("images/182-2.png"),
         buildDraggable("images/183.png"),
         buildDraggable("images/184.png"),
         buildDraggable("images/185.png"),
@@ -622,8 +907,14 @@ class PokeArea extends StatelessWidget {
         buildDraggable("images/188.png"),
         buildDraggable("images/189.png"),
         buildDraggable("images/190.png"),
-        buildDraggable("images/191.png"),
-        buildDraggable("images/192.png"),
+        buildDraggable("images/191-1.png"),
+        buildDraggable("images/191-2.png"),
+        buildDraggable("images/191-3.png"),
+        buildDraggable("images/191-4.png"),
+        buildDraggable("images/192-1.png"),
+        buildDraggable("images/192-2.png"),
+        buildDraggable("images/192-3.png"),
+        buildDraggable("images/192-4.png"),
         buildDraggable("images/193.png"),
         buildDraggable("images/194.png"),
         buildDraggable("images/195.png"),
@@ -742,7 +1033,8 @@ class PokeArea extends StatelessWidget {
         buildDraggable("images/308.png"),
         buildDraggable("images/309.png"),
         buildDraggable("images/310.png"),
-        buildDraggable("images/311.png"),
+        buildDraggable("images/311-1.png"),
+        buildDraggable("images/311-2.png"),
         buildDraggable("images/312.png"),
         buildDraggable("images/313.png"),
         buildDraggable("images/314.png"),
@@ -758,17 +1050,22 @@ class PokeArea extends StatelessWidget {
         buildDraggable("images/324.png"),
         buildDraggable("images/325.png"),
         buildDraggable("images/326.png"),
-        buildDraggable("images/327.png"),
+        buildDraggable("images/327-1.png"),
+        buildDraggable("images/327-2.png"),
         buildDraggable("images/328.png"),
         buildDraggable("images/329.png"),
         buildDraggable("images/330.png"),
         buildDraggable("images/331.png"),
-        buildDraggable("images/332.png"),
-        buildDraggable("images/333.png"),
-        buildDraggable("images/334.png"),
+        buildDraggable("images/332-1.png"),
+        buildDraggable("images/332-2.png"),
+        buildDraggable("images/333-1.png"),
+        buildDraggable("images/333-2.png"),
+        buildDraggable("images/334-1.png"),
+        buildDraggable("images/334-2.png"),
         buildDraggable("images/335.png"),
         buildDraggable("images/336.png"),
-        buildDraggable("images/337.png"),
+        buildDraggable("images/337-1.png"),
+        buildDraggable("images/337-2.png"),
         buildDraggable("images/338.png"),
         buildDraggable("images/339.png"),
         buildDraggable("images/340.png"),
@@ -796,14 +1093,26 @@ class PokeArea extends StatelessWidget {
         buildDraggable("images/362.png"),
         buildDraggable("images/363.png"),
         buildDraggable("images/364.png"),
-        buildDraggable("images/365.png"),
-        buildDraggable("images/366.png"),
-        buildDraggable("images/367.png"),
-        buildDraggable("images/368.png"),
+        buildDraggable("images/365-1.png"),
+        buildDraggable("images/365-2.png"),
+        buildDraggable("images/366-1.png"),
+        buildDraggable("images/366-2.png"),
+        buildDraggable("images/367-1.png"),
+        buildDraggable("images/367-2.png"),
+        buildDraggable("images/368-1.png"),
+        buildDraggable("images/368-2.png"),
+        buildDraggable("images/368-3.png"),
+        buildDraggable("images/368-4.png"),
         buildDraggable("images/369.png"),
-        buildDraggable("images/370.png"),
+        buildDraggable("images/370-1.png"),
+        buildDraggable("images/370-2.png"),
         buildDraggable("images/371.png"),
-        buildDraggable("images/372.png"),
+        buildDraggable("images/372-1.png"),
+        buildDraggable("images/372-2.png"),
+        buildDraggable("images/372-3.png"),
+        buildDraggable("images/372-4.png"),
+        buildDraggable("images/372-5.png"),
+        buildDraggable("images/372-6.png"),
         buildDraggable("images/373.png"),
         buildDraggable("images/374.png"),
         buildDraggable("images/375.png"),
@@ -829,10 +1138,13 @@ class PokeArea extends StatelessWidget {
         buildDraggable("images/395.png"),
         buildDraggable("images/396.png"),
         buildDraggable("images/397.png"),
-        buildDraggable("images/398.png"),
-        buildDraggable("images/399.png"),
+        buildDraggable("images/398-1.png"),
+        buildDraggable("images/398-2.png"),
+        buildDraggable("images/399-1.png"),
+        buildDraggable("images/399-2.png"),
         buildDraggable("images/400.png"),
       ],
     );
   }
 }
+*/
