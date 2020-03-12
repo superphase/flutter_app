@@ -1,12 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:path/path.dart' as path;
-import 'package:sqflite/sqflite.dart' as sqflite;
+import 'package:sqflite/sqflite.dart';
 import 'dart:async';
-import 'dart:math' as math;
 import 'database_helper.dart';
 
 void main() => runApp(ChangeNotifierProvider(
@@ -27,7 +22,8 @@ class PokeBoxProvider extends ChangeNotifier {
   String _enemyData4 = "images/000.png";
   String _enemyData5 = "images/000.png";
   String _enemyData6 = "images/000.png";
-  String _targetData = "images/000.png";
+  String _targetData1 = "images/000.png";
+  String _targetData2 = "images/000.png";
   String _pokeAreaType = "ノーマル";
 
   void setterMyData1(String data) {
@@ -90,8 +86,12 @@ class PokeBoxProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setterTargetData(String data) {
-    this._targetData = data;
+  void setterTargetData(String data, bool isMyTeam) {
+    if (isMyTeam) {
+      this._targetData1 = data;
+    } else {
+      this._targetData2 = data;
+    }
     notifyListeners();
   }
 
@@ -175,14 +175,15 @@ class MyApp extends StatelessWidget {
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<AppTheme>(context);
     final Size size = MediaQuery.of(context).size;
-    final double heightUnit = size.height / 16;
-    final double baseStatsHeight = heightUnit * 3;
-    final double pokeBoxHeight = heightUnit * 6;
-    final double pokeAreaHeight = heightUnit * 5;
+    final double heightUnit = size.height / 32;
+    final double baseStatsHeight = heightUnit * 5;
+    final double pokeBoxHeight = heightUnit * 12;
+    final double pokeAreaHeight = heightUnit * 7;
     return Consumer<PokeBoxProvider>(
       builder: (context, pokeBoxProvider, _) {
         return Scaffold(
@@ -204,7 +205,6 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-
           body: Column(
             //mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.end,
@@ -214,7 +214,19 @@ class HomePage extends StatelessWidget {
                   width: size.width,
                   height: baseStatsHeight,
                   color: Colors.amberAccent,
-                  child: WidgetBaseStats(),
+                  child: WidgetBaseStats(
+                    isMyTeam: true,
+                  ),
+                ),
+              ),
+              Card(
+                child: Container(
+                  width: size.width,
+                  height: baseStatsHeight,
+                  color: Colors.amberAccent,
+                  child: WidgetBaseStats(
+                    isMyTeam: false,
+                  ),
                 ),
               ),
               Row(
@@ -230,16 +242,34 @@ class HomePage extends StatelessWidget {
                             TableCellVerticalAlignment.bottom,
                         children: [
                           TableRow(children: [
-                            PokeBoxArea(boxId: "box1"),
-                            PokeBoxArea(boxId: "box2"),
+                            PokeBoxArea(
+                              boxId: "box1",
+                              isMyTeam: true,
+                            ),
+                            PokeBoxArea(
+                              boxId: "box2",
+                              isMyTeam: true,
+                            ),
                           ]),
                           TableRow(children: [
-                            PokeBoxArea(boxId: "box3"),
-                            PokeBoxArea(boxId: "box4"),
+                            PokeBoxArea(
+                              boxId: "box3",
+                              isMyTeam: true,
+                            ),
+                            PokeBoxArea(
+                              boxId: "box4",
+                              isMyTeam: true,
+                            ),
                           ]),
                           TableRow(children: [
-                            PokeBoxArea(boxId: "box5"),
-                            PokeBoxArea(boxId: "box6"),
+                            PokeBoxArea(
+                              boxId: "box5",
+                              isMyTeam: true,
+                            ),
+                            PokeBoxArea(
+                              boxId: "box6",
+                              isMyTeam: true,
+                            ),
                           ]),
                         ],
                       ),
@@ -254,16 +284,34 @@ class HomePage extends StatelessWidget {
                         defaultColumnWidth: const FlexColumnWidth(1.0),
                         children: [
                           TableRow(children: [
-                            PokeBoxArea(boxId: "box7"),
-                            PokeBoxArea(boxId: "box8"),
+                            PokeBoxArea(
+                              boxId: "box7",
+                              isMyTeam: false,
+                            ),
+                            PokeBoxArea(
+                              boxId: "box8",
+                              isMyTeam: false,
+                            ),
                           ]),
                           TableRow(children: [
-                            PokeBoxArea(boxId: "box9"),
-                            PokeBoxArea(boxId: "box10"),
+                            PokeBoxArea(
+                              boxId: "box9",
+                              isMyTeam: false,
+                            ),
+                            PokeBoxArea(
+                              boxId: "box10",
+                              isMyTeam: false,
+                            ),
                           ]),
                           TableRow(children: [
-                            PokeBoxArea(boxId: "box11"),
-                            PokeBoxArea(boxId: "box12"),
+                            PokeBoxArea(
+                              boxId: "box11",
+                              isMyTeam: false,
+                            ),
+                            PokeBoxArea(
+                              boxId: "box12",
+                              isMyTeam: false,
+                            ),
                           ]),
                         ],
                       ),
@@ -289,7 +337,8 @@ class HomePage extends StatelessWidget {
 
 class PokeBoxArea extends StatelessWidget {
   final String boxId;
-  PokeBoxArea({Key key, this.boxId}) : super(key: key);
+  final bool isMyTeam;
+  PokeBoxArea({Key key, this.boxId, this.isMyTeam}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Consumer<PokeBoxProvider>(
@@ -340,7 +389,7 @@ class PokeBoxArea extends StatelessWidget {
           child: DragTarget(builder: (context, candidateData, rejectedData) {
             return GestureDetector(
                 child: Image.asset(img),
-                onTap: () => pokeBoxProvider.setterTargetData(img));
+                onTap: () => pokeBoxProvider.setterTargetData(img, isMyTeam));
           }, onAccept: (data) {
             switch (boxId) {
               case "box1":
@@ -388,7 +437,8 @@ class PokeBoxArea extends StatelessWidget {
 }
 
 class WidgetBaseStats extends StatelessWidget {
-  WidgetBaseStats({Key key}) : super(key: key);
+  final bool isMyTeam;
+  WidgetBaseStats({Key key, this.isMyTeam}) : super(key: key);
 
   Future _getBaseStatsList(String data) async {
     return await _query(data.substring(7, data.length - 4));
@@ -397,7 +447,7 @@ class WidgetBaseStats extends StatelessWidget {
   _query(String pId) async {
     print('_query.pId=$pId');
     // get a reference to the database
-    sqflite.Database db = await DatabaseHelper.instance.database;
+    Database db = await DatabaseHelper.instance.database;
 
     // get single row
     List<String> columnsToSelect = [
@@ -438,7 +488,7 @@ class WidgetBaseStats extends StatelessWidget {
     ];
   }
 
-  _checkNull(data) {
+  _notNullText(data) {
     if (data == null) {
       return Text(' ');
     } else {
@@ -456,10 +506,16 @@ class WidgetBaseStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    String targetData;
     return Consumer<PokeBoxProvider>(builder: (context, pokeBoxProvider, _) {
+      if (isMyTeam) {
+        targetData = pokeBoxProvider._targetData1;
+      } else {
+        targetData = pokeBoxProvider._targetData2;
+      }
       return FutureBuilder(
         future: _getBaseStatsList(
-          pokeBoxProvider._targetData,
+          targetData,
         ),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -471,15 +527,15 @@ class WidgetBaseStats extends StatelessWidget {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        _checkNull(snapshot.data[0]),
-                        _checkNull(snapshot.data[7]),
-                        _checkNull(snapshot.data[8]),
+                        _notNullText(snapshot.data[0]),
+                        _notNullText(snapshot.data[7]),
+                        _notNullText(snapshot.data[8]),
                       ],
                     ),
                     Row(children: <Widget>[
-                      _checkNull(snapshot.data[9]),
-                      _checkNull(snapshot.data[10]),
-                      _checkNull(snapshot.data[11]),
+                      _notNullText(snapshot.data[9]),
+                      _notNullText(snapshot.data[10]),
+                      _notNullText(snapshot.data[11]),
                     ]),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -523,10 +579,10 @@ class _BaseStatsBox extends StatelessWidget {
   const _BaseStatsBox({Key key, this.valueName, this.value}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final pokeState = Provider.of<PokeBoxProvider>(context, listen: false);
+    final Size size = MediaQuery.of(context).size;
     return SizedBox(
-      height: 40,
-      width: 40,
+      height: size.width / 8,
+      width: size.width / 7,
       child: Card(
         child: Column(
           children: <Widget>[
@@ -534,10 +590,14 @@ class _BaseStatsBox extends StatelessWidget {
               valueName,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
+                fontSize: 10,
               ),
             ),
             Text(
               value.toString(),
+              style: TextStyle(
+                fontSize: 10,
+              ),
             ),
           ],
         ),
@@ -555,31 +615,29 @@ LongPressDraggable buildDraggable(String data1) => new LongPressDraggable(
 
 class PokeArea2 extends StatelessWidget {
   PokeArea2({Key key}) : super(key: key);
-  var list = [
-    TypeBox('ノーマル'),
-    TypeBox('ほのお'),
-    TypeBox('みず'),
-    TypeBox('でんき'),
-    TypeBox('くさ'),
-    TypeBox('こおり'),
-    TypeBox('かくとう'),
-    TypeBox('どく'),
-    TypeBox('じめん'),
-    TypeBox('ひこう'),
-    TypeBox('エスパー'),
-    TypeBox('むし'),
-    TypeBox('いわ'),
-    TypeBox('ゴースト'),
-    TypeBox('ドラゴン'),
-    TypeBox('あく'),
-    TypeBox('はがね'),
-    TypeBox('フェアリー'),
+  final list = [
+    const TypeBox('ノーマル'),
+    const TypeBox('ほのお'),
+    const TypeBox('みず'),
+    const TypeBox('でんき'),
+    const TypeBox('くさ'),
+    const TypeBox('こおり'),
+    const TypeBox('かくとう'),
+    const TypeBox('どく'),
+    const TypeBox('じめん'),
+    const TypeBox('ひこう'),
+    const TypeBox('エスパー'),
+    const TypeBox('むし'),
+    const TypeBox('いわ'),
+    const TypeBox('ゴースト'),
+    const TypeBox('ドラゴン'),
+    const TypeBox('あく'),
+    const TypeBox('はがね'),
+    const TypeBox('フェアリー'),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    final pokeState = Provider.of<PokeBoxProvider>(context, listen: false);
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
@@ -607,7 +665,7 @@ class SelectedPokeArea extends StatelessWidget {
   Future _getPokeAreaList(String type) async {
     //print('_query.Type=$type');
 
-    sqflite.Database db = await DatabaseHelper.instance.database;
+    Database db = await DatabaseHelper.instance.database;
 
     // get single row
     List<String> columnsToSelect = [
@@ -674,7 +732,7 @@ class SelectedPokeArea extends StatelessWidget {
 
 class TypeBox extends StatelessWidget {
   final type;
-  TypeBox(this.type);
+  const TypeBox(this.type);
 
   _textColorChange(type) {
     if (type == 'でんき' || type == 'こおり' || type == 'ひこう' || type == 'むし') {
@@ -685,7 +743,6 @@ class TypeBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     final pokeState = Provider.of<PokeBoxProvider>(context, listen: false);
     return GestureDetector(
       onTap: () => pokeState.setterPokeAreaType(type),
