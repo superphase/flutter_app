@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'database_helper.dart';
@@ -97,7 +98,7 @@ class PokeBoxProvider extends ChangeNotifier {
 
   void setterPokeAreaType(String data) {
     this._pokeAreaType = data;
-    print('setter=$data');
+    //print('setter=$data');
     notifyListeners();
   }
 
@@ -175,7 +176,6 @@ class MyApp extends StatelessWidget {
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<AppTheme>(context);
@@ -189,19 +189,40 @@ class HomePage extends StatelessWidget {
         return Scaffold(
           drawer: Container(
             width: size.width * 0.8,
+            height: size.height,
             child: Drawer(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                    size.width * 0.7, heightUnit * 15, 1.0, 1.0),
-                child: GestureDetector(
-                  child: Icon(
-                    IconData(
-                      58281,
-                      fontFamily: 'MaterialIcons',
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    flex: 7,
+                    child: ListView(
+                      children: <Widget>[
+                        Card(
+                          child: ListTile(
+                            title: Text('License'),
+                            onTap: () => showLicensePage(
+                                context: context,
+                                applicationName: 'poke app',
+                                applicationVersion: '1.1.0'
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  onTap: () => theme.changeMode(),
-                ),
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                      child: Icon(
+                        IconData(
+                          58281,
+                          fontFamily: 'MaterialIcons',
+                        ),
+                      ),
+                      onTap: () => theme.changeMode(),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -445,7 +466,7 @@ class WidgetBaseStats extends StatelessWidget {
   }
 
   _query(String pId) async {
-    print('_query.pId=$pId');
+    //print('_query.pId=$pId');
     // get a reference to the database
     Database db = await DatabaseHelper.instance.database;
 
