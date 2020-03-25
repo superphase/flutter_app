@@ -540,37 +540,72 @@ class WidgetBaseStats extends StatelessWidget {
         ),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Container(
-                height: size.width,
-                width: size.width * 3 / 16,
-                color: Colors.amberAccent,
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        _notNullText(snapshot.data[0]),
+            if (snapshot.data[0].length > 15) {
+              return Container(
+                  height: size.width,
+                  width: size.width * 3 / 16,
+                  color: Colors.amberAccent,
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          _notNullText(snapshot.data[0]),
+                        ],
+                      ),
+                      Row(children: <Widget>[
                         _notNullText(snapshot.data[7]),
                         _notNullText(snapshot.data[8]),
-                      ],
-                    ),
-                    Row(children: <Widget>[
-                      _notNullText(snapshot.data[9]),
-                      _notNullText(snapshot.data[10]),
-                      _notNullText(snapshot.data[11]),
-                    ]),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        _BaseStatsBox(valueName: "H", value: snapshot.data[1]),
-                        _BaseStatsBox(valueName: "A", value: snapshot.data[2]),
-                        _BaseStatsBox(valueName: "B", value: snapshot.data[3]),
-                        _BaseStatsBox(valueName: "C", value: snapshot.data[4]),
-                        _BaseStatsBox(valueName: "D", value: snapshot.data[5]),
-                        _BaseStatsBox(valueName: "S", value: snapshot.data[6]),
-                      ],
-                    ),
-                  ],
-                ));
+                        _notNullText(snapshot.data[9]),
+                        _notNullText(snapshot.data[10]),
+                        _notNullText(snapshot.data[11]),
+                      ]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          _BaseStatsBox(valueName: "H", value: snapshot.data[1]),
+                          _BaseStatsBox(valueName: "A", value: snapshot.data[2]),
+                          _BaseStatsBox(valueName: "B", value: snapshot.data[3]),
+                          _BaseStatsBox(valueName: "C", value: snapshot.data[4]),
+                          _BaseStatsBox(valueName: "D", value: snapshot.data[5]),
+                          _BaseStatsBox(valueName: "S", value: snapshot.data[6]),
+                        ],
+                      ),
+                    ],
+                  ));
+            }
+            else {
+              return Container(
+                  height: size.width,
+                  width: size.width * 3 / 16,
+                  color: Colors.amberAccent,
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          _notNullText(snapshot.data[0]),
+                          _notNullText(snapshot.data[7]),
+                          _notNullText(snapshot.data[8]),
+                        ],
+                      ),
+                      Row(children: <Widget>[
+                        _notNullText(snapshot.data[9]),
+                        _notNullText(snapshot.data[10]),
+                        _notNullText(snapshot.data[11]),
+                      ]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          _BaseStatsBox(valueName: "H", value: snapshot.data[1]),
+                          _BaseStatsBox(valueName: "A", value: snapshot.data[2]),
+                          _BaseStatsBox(valueName: "B", value: snapshot.data[3]),
+                          _BaseStatsBox(valueName: "C", value: snapshot.data[4]),
+                          _BaseStatsBox(valueName: "D", value: snapshot.data[5]),
+                          _BaseStatsBox(valueName: "S", value: snapshot.data[6]),
+                        ],
+                      ),
+                    ],
+                  ));
+            }
           } else {
             return Container(
               height: 50,

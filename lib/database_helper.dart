@@ -372,7 +372,7 @@ class DatabaseHelper {
     await db.rawInsert(
         "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('154-2', 'バスラオ(あおすじのすがた)', 70, 92, 65, 80, 55, 98, 'みず', null, 'いしあたま', 'てきおうりょく', 'かたやぶり')");
     await db.rawInsert(
-        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('155-1', 'ヨワシ(たんどくのすがた)', 45, 20, 20, 25, 25, 40, 'みず', null, 'ぎょぐん', null, null)");
+        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('155-1', 'ヨワシ(たんどくのすがた)' , 45, 20, 20, 25, 25, 40, 'みず', null, 'ぎょぐん', null, null)");
     await db.rawInsert(
         "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('155-2', 'ヨワシ(むれたすがた)', 45, 140, 130, 140, 135, 30, 'みず', null, 'ぎょぐん', null, null)");
     await db.rawInsert(
@@ -749,14 +749,14 @@ class DatabaseHelper {
         "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('332-1', 'ギルガルド(シールドフォルム)', 60, 50, 140, 50, 140, 60, 'はがね', 'ゴースト', 'バトルスイッチ', null, null)");
     await db.rawInsert(
         "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('332-2', 'ギルガルド(ブレードフォルム)', 60, 140, 50, 140, 50, 60, 'はがね', 'ゴースト', 'バトルスイッチ', null, null)");
+    //await db.rawInsert(
+    //    "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('333-1', 'ポニータ', 50, 85, 55, 65, 65, 90, 'ほのお', null, 'にげあし', 'もらいび', 'ほのおのからだ')");
     await db.rawInsert(
-        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('333-1', 'ポニータ', 50, 85, 55, 65, 65, 90, 'ほのお', null, 'にげあし', 'もらいび', 'ほのおのからだ')");
+        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('333', 'ポニータ(ガラルのすがた)', 50, 85, 55, 65, 65, 90, 'エスパー', null, 'にげあし', 'パステルベール', 'きけんよち')");
+    //await db.rawInsert(
+        //"INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('334-1', 'ギャロップ', 65, 100, 70, 80, 80, 105, 'ほのお', null, 'にげあし', 'もらいび', 'ほのおのからだ')");
     await db.rawInsert(
-        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('333-2', 'ポニータ(ガラルのすがた)', 50, 85, 55, 65, 65, 90, 'エスパー', null, 'にげあし', 'パステルベール', 'きけんよち')");
-    await db.rawInsert(
-        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('334-1', 'ギャロップ', 65, 100, 70, 80, 80, 105, 'ほのお', null, 'にげあし', 'もらいび', 'ほのおのからだ')");
-    await db.rawInsert(
-        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('334-2', 'ギャロップ(ガラルのすがた)', 65, 100, 70, 80, 80, 105, 'エスパー', 'フェアリー', 'にげあし', 'パステルベール', 'きけんよち')");
+        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('334', 'ギャロップ(ガラルのすがた)', 65, 100, 70, 80, 80, 105, 'エスパー', 'フェアリー', 'にげあし', 'パステルベール', 'きけんよち')");
     await db.rawInsert(
         "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('335', 'ヤバチャ', 40, 45, 45, 74, 54, 50, 'ゴースト', null, 'くだけるよろい', null, 'のろわれボディ')");
     await db.rawInsert(
@@ -825,18 +825,18 @@ class DatabaseHelper {
         "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('365-2', 'バリヤード(ガラルのすがた)', 50, 65, 65, 90, 90, 100, 'こおり', 'エスパー', 'やるき', 'バリアフリー', 'アイスボディ')");
     await db.rawInsert(
         "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('366', 'バリコオル', 80, 85, 75, 110, 100, 70, 'こおり', 'エスパー', 'ちどりあし', 'バリアフリー', 'アイスボディ')");
+    //await db.rawInsert(
+    //  "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('367-1', 'ダルマッカ', 70, 90, 45, 15, 45, 50, 'ほのお', null, 'はりきり', null, 'せいしんりょく')");
     await db.rawInsert(
-        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('367-1', 'ダルマッカ', 70, 90, 45, 15, 45, 50, 'ほのお', null, 'はりきり', null, 'せいしんりょく')");
+        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('367', 'ダルマッカ(ガラルのすがた)', 70, 90, 45, 15, 45, 50, 'こおり', null, 'はりきり', null, 'せいしんりょく')");
+    //await db.rawInsert(
+    //    "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('368-1', 'ヒヒダルマ', 105, 140, 55, 30, 55, 95, 'ほのお', null, 'ちからずく', null, 'ダルマモード')");
+    //await db.rawInsert(
+    //    "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('368-2', 'ヒヒダルマ(ダルマモード)', 105, 30, 105, 140, 105, 55, 'ほのお', 'エスパー', 'ちからずく', null, 'ダルマモード')");
     await db.rawInsert(
-        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('367-2', 'ダルマッカ(ガラルのすがた)', 70, 90, 45, 15, 45, 50, 'こおり', null, 'はりきり', null, 'せいしんりょく')");
+        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('368-1', 'ヒヒダルマ(ガラルのすがた)', 105, 140, 55, 30, 55, 95, 'こおり', null, 'ごりむちゅう', null, 'ダルマモード')");
     await db.rawInsert(
-        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('368-1', 'ヒヒダルマ', 105, 140, 55, 30, 55, 95, 'ほのお', null, 'ちからずく', null, 'ダルマモード')");
-    await db.rawInsert(
-        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('368-2', 'ヒヒダルマ(ダルマモード)', 105, 30, 105, 140, 105, 55, 'ほのお', 'エスパー', 'ちからずく', null, 'ダルマモード')");
-    await db.rawInsert(
-        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('368-3', 'ヒヒダルマ(ガラルのすがた)', 105, 140, 55, 30, 55, 95, 'こおり', null, 'ごりむちゅう', null, 'ダルマモード')");
-    await db.rawInsert(
-        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('368-4', 'ヒヒダルマ(ガラルのすがた・ダルマモード)', 105, 160, 55, 30, 55, 135, 'こおり', 'ほのお', 'ちからずく', null, 'ダルマモード')");
+        "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('368-2', 'ヒヒダルマ(ガラルのすがた・ダルマモード)', 105, 160, 55, 30, 55, 135, 'こおり', 'ほのお', 'ちからずく', null, 'ダルマモード')");
     await db.rawInsert(
         "INSERT INTO $table ($columnPokeId, $columnName, $columnH, $columnA, $columnB, $columnC, $columnD, $columnS, $columnType1, $columnType2, $columnAbility1, $columnAbility2, $columnAbility3) VALUES('369', 'イシヘンジン', 100, 125, 125, 20, 20, 70, 'いわ', null, 'パワースポット', null, null)");
     await db.rawInsert(
